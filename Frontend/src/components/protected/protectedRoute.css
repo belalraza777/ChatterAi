@@ -1,0 +1,41 @@
+/* advancedRedSpinner.css */
+.spinner-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background: #0f0f0f; /* dark background for contrast */
+}
+
+.advanced-spinner {
+  width: 120px;
+  height: 120px;
+  border: 6px solid transparent;
+  border-top: 6px solid #ef4444;   /* red */
+  border-right: 6px solid #f87171; /* lighter red */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  position: relative;
+  box-shadow: 0 0 25px rgba(239, 68, 68, 0.8);
+}
+
+.advanced-spinner::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  border: 6px solid transparent;
+  border-bottom: 6px solid #ef4444;
+  border-left: 6px solid #f87171;
+  border-radius: 50%;
+  animation: spin 1.5s linear infinite reverse;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

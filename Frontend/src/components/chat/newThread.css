@@ -1,0 +1,84 @@
+.new-thread-container {
+    margin-bottom: 20px;
+}
+
+.new-thread-button {
+    width: 90%;
+    padding: 12px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: 0px 12px;
+    margin-top: 12px;
+}
+
+.new-thread-button:hover {
+    background-color: var(--primary-dark);
+}
+
+.new-thread-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.new-thread-form input {
+    padding: 12px 15px;
+    border-radius: 6px;
+    border: 1px solid var(--medium-gray);
+    background-color: var(--dark-gray);
+    color:white;
+    font-size: 1rem;
+    margin: 6px;
+}
+
+.new-thread-form input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.form-actions button {
+    color: black !important;
+    border: 0.5px solid black !important;
+    margin: 15px 6px;
+    flex: 1;
+    padding: 5px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.form-actions button[type="submit"] {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+}
+
+.form-actions button[type="submit"]:hover {
+    background-color: var(--primary-dark);
+}
+
+.form-actions button[type="submit"]:disabled {
+    background-color: var(--medium-gray);
+    cursor: not-allowed;
+}
+
+.form-actions button[type="button"] {
+    background-color: transparent;
+    color: var(--light-gray);
+    border: 1px solid var(--medium-gray);
+}
+
+.form-actions button[type="button"]:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
