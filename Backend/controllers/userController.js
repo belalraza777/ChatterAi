@@ -76,7 +76,7 @@ export const signupUser = async (req, res) => {
 
 // Logout user
 export const logoutUser = (req, res) => {
-    res.clearCookie("token",{
+    res.clearCookie("token", {
         sameSite: "none",
         secure: true
     });
@@ -88,7 +88,15 @@ export const logoutUser = (req, res) => {
 
 // check user Login
 export const checkUserLogin = (req, res) => {
-    const token = req.cookies?.token;
+    let token = req.cookies?.token;
+
+    if (!token) {
+        //check header too
+        const authHeader = req.headers.authorization;
+        if (authHeader && authHeader.startsWith("Bearer ")) {
+            token = authHeader.split(" ")[1];  // Extract token from "Bearer <token>"
+        }
+    }
 
     // No token → Unauthorized
     if (!token) {

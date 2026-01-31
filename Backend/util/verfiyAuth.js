@@ -4,6 +4,14 @@ export function verifyAuth(req, res, next) {
     // Get token from cookie or header
     let token = req.cookies?.token;
 
+    if (!token) {
+        //check header too
+        const authHeader = req.headers.authorization;
+        if (authHeader && authHeader.startsWith("Bearer ")) {
+            token = authHeader.split(" ")[1];  // Extract token from "Bearer <token>"
+        }
+    }
+
     // If no token in cookie, check Authorization header
     if (!token) {
         const authHeader = req.headers.authorization;
