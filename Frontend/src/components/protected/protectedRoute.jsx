@@ -9,7 +9,14 @@ const ProtectedRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    axios.get("https://chatterai-backend.onrender.com/api/user/check", { withCredentials: true })
+    // Use dynamic API base URL for production/local
+    let API_BASE = import.meta.env.VITE_API_BASE_URL;
+    if (!API_BASE) {
+      API_BASE = window.location.hostname === 'localhost'
+        ? 'http://localhost:5000'
+        : 'https://chatterai-backend.onrender.com';
+    }
+    axios.get(`${API_BASE}/api/user/check`, { withCredentials: true })
       .then(res => {
         if (res.status === 200) {
           setIsAuthenticated(true);
