@@ -5,6 +5,8 @@ import SelectedThread from './selectedThread.jsx';
 import MessageBox from './messageBox.jsx';
 import Sidebar from './sideBar.jsx';
 import Loader from './loader.jsx';
+import { use } from 'react';
+import { useEffect } from 'react';
 
 
 export default function Chat() {
@@ -17,6 +19,10 @@ export default function Chat() {
         isLoading,
         handleSendMessage
     } = useChat();
+
+    useEffect(() => { 
+        loadThreads();  
+    }, []);
 
     return (
         <div className="chat-app">
