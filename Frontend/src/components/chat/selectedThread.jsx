@@ -1,5 +1,7 @@
 import { useRef, useEffect } from 'react'
 import './chat.css'
+import Markdown from 'react-markdown'; 
+
 
 export default function SelectedThread({ thread }) {
   //auto scroll to end 
@@ -46,7 +48,7 @@ export default function SelectedThread({ thread }) {
         {thread.messages?.map((msg) => (
           <div key={msg._id || msg.timestamp} className={`message ${msg.role}`}>
             <p>
-              <strong>{msg.role === 'user' ? 'You' : 'AI'}:</strong> {msg.content}
+              <strong>{msg.role === 'user' ? 'You' : 'AI'}:</strong> <Markdown>{msg.content}</Markdown>
             </p>
             <div className='message-time'>{formatTime(msg.timestamp)}</div>
           </div>

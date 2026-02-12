@@ -15,11 +15,6 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import morgan from 'morgan';
 
-// import path from "path";
-// import { fileURLToPath } from 'url';
-// import { dirname } from 'path';
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = dirname(__filename);
 
 import chatRouter from './routes/chat.js';
 import userRouter from './routes/user.js';
@@ -60,7 +55,7 @@ app.use(cookieParser());
 if (NODE_ENV === 'production') {
     app.use(express.static('public'));
     app.use(helmet());
-    app.use(morgan('tiny'));
+    app.use(morgan('combined'));
 } else {
     app.use(morgan('dev'));
 }

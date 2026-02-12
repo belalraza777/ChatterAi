@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import dotenv from 'dotenv';
 dotenv.config();
+import systemPrompt from "./system_prompt.js";
 
 const openai = new OpenAI({
     apiKey: process.env.API_KEY,
@@ -13,10 +14,10 @@ export async function apiCall(message) {
         const response = await openai.chat.completions.create({
             model: "openai/gpt-4.1",
             messages: [
-                { role: "system", content: process.env.SYSTEM_PROMPT },
+                { role: "system", content: systemPrompt },
                 ...message
             ],
-            stream: false
+            stream: false 
         });
         return response.choices[0].message.content || "Hmm, I didn't get that. Can you repeat?";
     } catch (err) {
