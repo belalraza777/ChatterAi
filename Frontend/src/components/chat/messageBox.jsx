@@ -24,6 +24,8 @@ export default function MessageBox({ onSend }) {
        <i class="fa-solid fa-paper-plane"></i>
       </button>
       </div>
+      {/* Safety note below input, similar to ChatGPT footer messaging. */}
+      <p className="message-box-note">Chatter AI may generate inaccurate or incomplete responses. Please verify important information.</p>
     </form>
   );
 }

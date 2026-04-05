@@ -5,6 +5,7 @@ import SelectedThread from './selectedThread.jsx';
 import MessageBox from './messageBox.jsx';
 import Sidebar from './sideBar.jsx';
 import Loader from './loader.jsx';
+import { HiOutlineFolderOpen } from 'react-icons/hi2';
 import { use } from 'react';
 import { useEffect } from 'react';
 
@@ -42,7 +43,10 @@ export default function Chat() {
                     </>
                 ) : (
                     <div className="empty-thread">
-                        <h2>📂 No thread selected</h2>
+                        <h2>
+                            <HiOutlineFolderOpen className="empty-state-icon" aria-hidden="true" />
+                            No thread selected
+                        </h2>
                         <p>Select a conversation from the sidebar or start a new one.</p>
                     </div>
                 )}

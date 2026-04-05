@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react'
 import './chat.css'
 import Markdown from 'react-markdown'; 
+import { HiOutlineChatBubbleLeftRight, HiOutlineFolderOpen } from 'react-icons/hi2';
 
 
 export default function SelectedThread({ thread }) {
@@ -36,7 +37,10 @@ export default function SelectedThread({ thread }) {
   if (thread == null) {
   return (
     <div className="empty-thread">
-      <h2>📂 No thread selected</h2>
+      <h2>
+        <HiOutlineFolderOpen className="empty-state-icon" aria-hidden="true" />
+        No thread selected
+      </h2>
       <p>Select a conversation from the sidebar or start a new one.</p>
     </div>
   );
@@ -56,7 +60,10 @@ export default function SelectedThread({ thread }) {
 
         {!(thread.messages?.length) && (
           <div className="empty-chat">
-            <h2>💬 Start your first conversation</h2>
+            <h2>
+              <HiOutlineChatBubbleLeftRight className="empty-state-icon" aria-hidden="true" />
+              Start your first conversation
+            </h2>
             <p>Type a message to begin chatting...</p>
           </div>
         )}
