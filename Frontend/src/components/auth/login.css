@@ -15,7 +15,7 @@
     justify-content: center;
     align-items: center;
     background: #6b2f2f;
-    background: linear-gradient(150deg, rgba(155, 42, 42, 1) 0%, rgba(242, 75, 78, 1) 15%, rgba(255, 128, 136, 1) 32%, rgba(250, 40, 89, 1) 50%, rgba(247, 96, 101, 1) 71%, rgb(13, 6, 6) 100%);
+    background: linear-gradient(135deg, #ff2e4d 0%, #ff6b7a 50%, #ff8a95 100%);
     padding: 20px;
 }
 
@@ -159,7 +159,7 @@ button:disabled {
         padding: 30px 20px;
         margin: 10px;
     }
-    
+
     .login-header h1 {
         font-size: 1.8rem;
     }

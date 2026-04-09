@@ -1,4 +1,3 @@
-dotenv.config();
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -14,6 +13,7 @@ import cors from "cors";
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import morgan from 'morgan';
+import multer from 'multer';
 
 
 import chatRouter from './routes/chat.js';
@@ -76,8 +76,26 @@ app.use("/api/user", userRouter);
 
 //error handling middleware
 app.use((err, req, res, next) => {
+    // Return a clear message when an uploaded image exceeds the size limit.
+    if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({
+            success: false,
+            error: 'Image size must be 10 MB or less.'
+        });
+    }
+
+    if (err?.status === 400) {
+        return res.status(400).json({
+            success: false,
+            error: err.message
+        });
+    }
+
     const { status = 500, message = "some error" } = err;
-    res.status(status).send(err.message);
+    return res.status(status).json({
+        success: false,
+        error: message
+    });
 });
 
 

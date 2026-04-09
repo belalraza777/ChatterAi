@@ -1,6 +1,7 @@
 import User from '../models/userModel.js';
 import ChatThread from '../models/threadModel.js';
-import { apiCall } from "../util/api.js";
+import { apiCall } from "../ai/llm.js";
+import { readFile, unlink } from "fs/promises";
 
 // Get all threads of a user
 export const getAllThreads = async (req, res) => {
@@ -60,28 +61,60 @@ export const getThread = async (req, res) => {
 // Start chat with a thread
 export const sendMessage = async (req, res) => {
     const { threadId } = req.params;
-    const { userMessage } = req.body;
+    const { userMessage = "", model } = req.body;
+    const uploadedImage = req.file || null;
+    const trimmedMessage = userMessage.trim();
 
-    const thread = await ChatThread.findById(threadId);
-    if (!thread) {
-        return res.status(404).json({
-            success: false,
-            error: "Thread not found"
+    try {
+        const thread = await ChatThread.findById(threadId);
+        if (!thread) {
+            return res.status(404).json({
+                success: false,
+                error: "Thread not found"
+            });
+        }
+
+        const historyMessages = thread.messages.map((msg) => ({
+            role: msg.role,
+            content: msg.content,
+        }));
+
+        let imageFile = null;
+        if (uploadedImage?.path) {
+            // Read the uploaded file into memory only for the outbound model request.
+            const imageBuffer = await readFile(uploadedImage.path);
+            imageFile = {
+                mimetype: uploadedImage.mimetype,
+                buffer: imageBuffer,
+            };
+        }
+
+        // Keep DB schema unchanged by storing text even when the user sends image-only input.
+        thread.messages.push({
+            role: "user",
+            content: trimmedMessage || "[Image uploaded]",
         });
+        await thread.save();
+
+        const reply = await apiCall({
+            history: historyMessages,
+            userMessage: trimmedMessage,
+            imageFile,
+            model,
+        });
+
+        thread.messages.push({ role: "assistant", content: reply });
+        await thread.save();
+
+        return res.status(200).json({
+            success: true,
+            data: { reply }
+        });
+    } finally {
+        if (uploadedImage?.path) {
+            await unlink(uploadedImage.path).catch(() => undefined);
+        }
     }
-
-    thread.messages.push({ role: "user", content: userMessage });
-    await thread.save();
-
-    const reply = await apiCall(thread.messages);
-
-    thread.messages.push({ role: "assistant", content: reply });
-    await thread.save();
-
-    res.status(200).json({
-        success: true,
-        data: { reply }
-    });
 };
 
 // Delete thread

@@ -6,8 +6,6 @@ import MessageBox from './messageBox.jsx';
 import Sidebar from './sideBar.jsx';
 import Loader from './loader.jsx';
 import { HiOutlineFolderOpen } from 'react-icons/hi2';
-import { use } from 'react';
-import { useEffect } from 'react';
 
 
 export default function Chat() {
@@ -18,12 +16,11 @@ export default function Chat() {
         setSelectedThread,
         loadThreads,
         isLoading,
-        handleSendMessage
+        handleSendMessage,
+        selectedModel,
+        setSelectedModel,
+        modelOptions,
     } = useChat();
-
-    useEffect(() => { 
-        loadThreads();  
-    }, []);
 
     return (
         <div className="chat-app">
@@ -39,7 +36,13 @@ export default function Chat() {
                     <>
                         <SelectedThread thread={selectedThread} />
                         {isLoading && <Loader />}
-                        <MessageBox onSend={handleSendMessage} />
+                        {/* Composer now includes model selection and optional image upload. */}
+                        <MessageBox
+                            onSend={handleSendMessage}
+                            selectedModel={selectedModel}
+                            onModelChange={setSelectedModel}
+                            modelOptions={modelOptions}
+                        />
                     </>
                 ) : (
                     <div className="empty-thread">

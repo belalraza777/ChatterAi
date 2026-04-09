@@ -12,9 +12,6 @@ if (!API_BASE) {
 const axiosInstance = axios.create({
     baseURL: API_BASE,
     withCredentials: true,
-    headers: {
-        "Content-Type": "application/json",
-    },
 });
 
 // Optional: Add a response interceptor for global error handling
@@ -42,8 +39,19 @@ export function showThreadMessage(threadId) {
 }
 
 // Send a chat message to a specific thread
-export function chatMessage(threadId, userMessage) {
-    return axiosInstance.post(`/api/chat/${threadId}/message`, { userMessage });
+export function chatMessage(threadId, payload) {
+    // Use FormData to send model + text + optional image in one request.
+    const formData = new FormData();
+    formData.append("userMessage", payload?.userMessage || "");
+    formData.append("model", payload?.model || "");
+
+    if (payload?.imageFile) {
+        formData.append("image", payload.imageFile);
+    }
+
+    return axiosInstance.post(`/api/chat/${threadId}/message`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+    });
 }
 
 //delete thread 

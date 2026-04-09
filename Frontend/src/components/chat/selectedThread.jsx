@@ -51,9 +51,10 @@ export default function SelectedThread({ thread }) {
       <div className="messages-list" ref={chatRef}>
         {thread.messages?.map((msg) => (
           <div key={msg._id || msg.timestamp} className={`message ${msg.role}`}>
-            <p>
+            {/* Markdown can render <p>, so use a div wrapper to avoid nested paragraph tags. */}
+            <div>
               <strong>{msg.role === 'user' ? 'You' : 'AI'}:</strong> <Markdown>{msg.content}</Markdown>
-            </p>
+            </div>
             <div className='message-time'>{formatTime(msg.timestamp)}</div>
           </div>
         ))}

@@ -1,4 +1,5 @@
 import Joi from "joi";
+import { GROQ_FREE_MODELS } from "../ai/models.js";
 
 const userValidationSchema = Joi.object({
   username: Joi.string()
@@ -18,7 +19,12 @@ const userValidationSchema = Joi.object({
 
 const messageValidationSchema = Joi.object({
   userMessage: Joi.string()
-    .max(500)
+    .allow("")
+    .max(4000)
+    .optional(),
+  model: Joi.string()
+    .trim()
+    .valid(...GROQ_FREE_MODELS)
     .required(),
 });
 
@@ -42,13 +48,33 @@ export const validateUser = (req, res, next) => {
   next();
 };
 export const validateMessage = (req, res, next) => {
-  const { error } = messageValidationSchema.validate(req.body, { abortEarly: false });  
+  const payload = {
+    userMessage: req.body?.userMessage || "",
+    model: req.body?.model,
+  };
+
+  const { error } = messageValidationSchema.validate(payload, { abortEarly: false });
+
   if (error) {
     return res.status(400).json({
       message: "Validation error",
       details: error.details.map((err) => err.message),
     });
   }
+
+  const hasText = payload.userMessage.trim().length > 0;
+  const hasImage = Boolean(req.file);
+
+  // Accept text-only, image-only, or mixed input.
+  if (!hasText && !hasImage) {
+    return res.status(400).json({
+      message: "Validation error",
+      details: ["Please provide message text or an image."],
+    });
+  }
+
+  req.body.userMessage = payload.userMessage;
+  req.body.model = payload.model;
 
   next();
 };

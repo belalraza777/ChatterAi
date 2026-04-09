@@ -5,10 +5,10 @@
 .new-thread-button {
     width: 90%;
     padding: 12px;
-    background-color: var(--primary);
-    color: white;
+    background: linear-gradient(135deg, #ff2e4d 0%, #ff6b7a 50%, #ff8a95 100%);
+    color: black;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -17,7 +17,7 @@
 }
 
 .new-thread-button:hover {
-    background-color: var(--primary-dark);
+    background-color: var(--primary);
 }
 
 .new-thread-form {
@@ -31,7 +31,7 @@
     border-radius: 6px;
     border: 1px solid var(--medium-gray);
     background-color: var(--dark-gray);
-    color:white;
+    color: white;
     font-size: 1rem;
     margin: 6px;
 }
