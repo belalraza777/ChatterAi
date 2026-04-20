@@ -70,6 +70,8 @@ export default function MessageBox({ onSend, selectedModel, onModelChange, model
     autoResizeTextarea(e.target);
   };
 
+  const canSend = Boolean(message.trim() || selectedImage);
+
   // Send on Enter and keep Shift+Enter for new lines.
   const handleInputKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -97,11 +99,11 @@ export default function MessageBox({ onSend, selectedModel, onModelChange, model
 
           <button
             type="submit"
-            className="message-box-send"
-            disabled={!message.trim() && !selectedImage}
+            className={`message-box-send ${canSend ? "ready" : "idle"}`}
+            disabled={!canSend}
             aria-label="Send message"
           >
-            <HiOutlinePaperAirplane />
+            <HiOutlinePaperAirplane className="message-box-send-icon" />
           </button>
         </div>
 

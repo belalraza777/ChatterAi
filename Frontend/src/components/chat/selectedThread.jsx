@@ -17,6 +17,10 @@ export default function SelectedThread({ thread }) {
   const formatTime = (timestamp) => {
     try {
       const date = new Date(timestamp);
+      if (Number.isNaN(date.getTime())) {
+        return '';
+      }
+
       const formattedDate = date.toLocaleDateString([], {
         year: 'numeric',
         month: 'short',   // Jan, Feb, ...
@@ -49,13 +53,25 @@ export default function SelectedThread({ thread }) {
   return (
     <div className="thread-messages">
       <div className="messages-list" ref={chatRef}>
-        {thread.messages?.map((msg) => (
-          <div key={msg._id || msg.timestamp} className={`message ${msg.role}`}>
-            {/* Markdown can render <p>, so use a div wrapper to avoid nested paragraph tags. */}
-            <div>
-              <strong>{msg.role === 'user' ? 'You' : 'AI'}:</strong> <Markdown>{msg.content}</Markdown>
+        {thread.messages?.map((msg, index) => (
+          <div
+            key={msg._id || `${msg.role}-${msg.timestamp || index}`}
+            className={`message-row ${msg.role}`}
+          >
+            <div className={`message-avatar ${msg.role}`} aria-hidden="true">
+              {msg.role === 'user' ? 'Y' : 'AI'}
             </div>
-            <div className='message-time'>{formatTime(msg.timestamp)}</div>
+
+            <div className={`message ${msg.role}`}>
+              {/* Markdown can render <p>, so use a div wrapper for consistent spacing. */}
+              <div className="message-content">
+                <Markdown>{msg.content}</Markdown>
+              </div>
+
+              <div className="message-footer">
+                <span className='message-time'>{formatTime(msg.timestamp)}</span>
+              </div>
+            </div>
           </div>
         ))}
 
