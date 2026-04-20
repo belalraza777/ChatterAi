@@ -5,6 +5,7 @@ import Login from './components/auth/login';
 import Home from './components/home/home';
 import Chat from './components/chat/chat';
 import ProtectedRoute from './components/protected/protectedRoute';
+import { ChatProvider } from './context/useChatContext.jsx';
 
 function App() {
   return (
@@ -16,7 +17,9 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/chat"  element={
             <ProtectedRoute>
-              {<Chat />}
+              <ChatProvider>
+                <Chat />
+              </ChatProvider>
             </ProtectedRoute>
           } />
         </Routes>

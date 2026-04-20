@@ -58,6 +58,7 @@ export const getThread = async (req, res) => {
     }
 };
 
+
 // Start chat with a thread
 export const sendMessage = async (req, res) => {
     const { threadId } = req.params;
@@ -83,9 +84,10 @@ export const sendMessage = async (req, res) => {
         if (uploadedImage?.path) {
             // Read the uploaded file into memory only for the outbound model request.
             const imageBuffer = await readFile(uploadedImage.path);
+            // Imagefile obj contain mimetype and buffer which is used to construct the base64 string for the LLM input. We keep the DB schema unchanged by not storing image-specific fields in our message documents.
             imageFile = {
-                mimetype: uploadedImage.mimetype,
-                buffer: imageBuffer,
+                mimetype: uploadedImage.mimetype, // e.g., "image/png"
+                buffer: imageBuffer,  // it store buffer of the image which is used to construct the base64 string for the LLM input, but we don't store the image in our DB.
             };
         }
 

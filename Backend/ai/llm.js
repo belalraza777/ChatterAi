@@ -2,7 +2,7 @@ import OpenAI from "openai";
 import dotenv from 'dotenv';
 dotenv.config();
 // Reuse the shared system prompt from the utility module.
-import systemPrompt from "../util/system_prompt.js";
+import systemPrompt from "./system_prompt.js";
 
 //Groq client setup - uses GROQ_API_KEY or falls back to generic API_KEY for flexibility.
 const groq = new OpenAI({
