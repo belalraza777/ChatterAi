@@ -61,10 +61,14 @@ if (NODE_ENV === 'production') {
 }
 
 // CORS
+const frontendOrigins = [
+    process.env.FRONTEND_URL || 'http://localhost:5173',
+    process.env.REACT_NATIVE_URL || 'http://localhost:8081',
+    'http://localhost:19006'
+];
+
 app.use(cors({
-    origin: NODE_ENV === 'production'
-        ? process.env.FRONTEND_URL
-        : 'http://localhost:5173',
+    origin: frontendOrigins,
     credentials: true
 }));
 
