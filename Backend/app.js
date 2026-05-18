@@ -3,106 +3,32 @@ dotenv.config();
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const PORT = process.env.PORT || 5000;
+
 import express from 'express';
-const app = express();
 import mongoose from 'mongoose';
-import cookieParser from 'cookie-parser';
-import cors from "cors";
-
-// Security packages
-import helmet from 'helmet';
-import rateLimit from 'express-rate-limit';
-import morgan from 'morgan';
-import multer from 'multer';
-
-
 import chatRouter from './routes/chat.js';
 import userRouter from './routes/user.js';
+import { applyGlobalMiddleware, applyErrorMiddleware } from './middleware/setupMiddleware.js';
 
+const app = express();
 
-//connect db
 const connectDB = async () => {
-    try {
-        await mongoose.connect(process.env.MONGODB_URL);
-        console.log("Connected with Database!");
-    } catch (err) {
-        console.log("Failed to connect with Db", err);
-    }
-}
+  try {
+    await mongoose.connect(process.env.MONGODB_URL);
+    console.log('Connected with Database!');
+  } catch (err) {
+    console.log('Failed to connect with Db', err);
+  }
+};
 connectDB();
 
+applyGlobalMiddleware(app);
 
-// Rate Limiting
-const limiter = rateLimit({
-    windowMs: 10 * 60 * 1000, // 10 minutes
-    max: 100, // limit each IP to 100 requests per windowMs
-    message: 'Too many requests from this IP, please try again later.'
-});
-const authLimiter = rateLimit({
-    windowMs: 5 * 60 * 1000, // 5 minutes
-    max: 5, // limit each IP to 5 requests per windowMs
-    message: 'Too many login/signup attempts from this IP, please try again later.'
-});
-app.use('/api', limiter);
-app.use('/api/user/login', authLimiter);
-app.use('/api/user/signup', authLimiter);
+app.use('/api/chat', chatRouter);
+app.use('/api/user', userRouter);
 
-// Body parsers
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
-
-if (NODE_ENV === 'production') {
-    app.use(express.static('public'));
-    app.use(helmet());
-    app.use(morgan('combined'));
-} else {
-    app.use(morgan('dev'));
-}
-
-// CORS
-const frontendOrigins = [
-    process.env.FRONTEND_URL || 'http://localhost:5173',
-    process.env.REACT_NATIVE_URL || 'http://localhost:8081',
-    'http://localhost:19006'
-];
-
-app.use(cors({
-    origin: frontendOrigins,
-    credentials: true
-}));
-
-
-// routes
-app.use("/api/chat", chatRouter);
-app.use("/api/user", userRouter);
-
-
-//error handling middleware
-app.use((err, req, res, next) => {
-    // Return a clear message when an uploaded image exceeds the size limit.
-    if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
-        return res.status(400).json({
-            success: false,
-            error: 'Image size must be 10 MB or less.'
-        });
-    }
-
-    if (err?.status === 400) {
-        return res.status(400).json({
-            success: false,
-            error: err.message
-        });
-    }
-
-    const { status = 500, message = "some error" } = err;
-    return res.status(status).json({
-        success: false,
-        error: message
-    });
-});
-
+applyErrorMiddleware(app);
 
 app.listen(PORT, () => {
-    console.log(`Server running in ${NODE_ENV} mode on Port: ${PORT}`);
+  console.log(`Server running in ${NODE_ENV} mode on Port: ${PORT}`);
 });

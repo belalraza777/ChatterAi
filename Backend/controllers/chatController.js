@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import User from '../models/userModel.js';
 import ChatThread from '../models/threadModel.js';
 import { apiCall } from "../ai/llm.js";
@@ -43,6 +44,12 @@ export const createThread = async (req, res) => {
 // Show single thread
 export const getThread = async (req, res) => {
     const { threadId } = req.params;
+    if (!mongoose.isValidObjectId(threadId)) {
+        return res.status(400).json({
+            success: false,
+            error: "Invalid thread id",
+        });
+    }
     const thread = await ChatThread.findById(threadId);
 
     if (thread) {

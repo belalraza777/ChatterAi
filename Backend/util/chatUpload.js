@@ -11,6 +11,29 @@ const allowedImageMimeTypes = new Set([
   "image/gif",
 ]);
 
+const normalizeMimeType = (mimetype = "") => {
+  const value = mimetype.toLowerCase().trim();
+  if (!value || value === "application/octet-stream") {
+    return "";
+  }
+  if (value === "image/jpg") {
+    return "image/jpeg";
+  }
+  return value;
+};
+
+const mimeFromExtension = (filename = "") => {
+  const extension = path.extname(filename).toLowerCase();
+  const map = {
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".png": "image/png",
+    ".webp": "image/webp",
+    ".gif": "image/gif",
+  };
+  return map[extension] || "";
+};
+
 // Ensure the uploads directory exists at startup. Multer will not create it automatically, and we want to avoid runtime errors when handling file uploads.
 const uploadDirectory = path.join(process.cwd(), "uploads");
 if (!fs.existsSync(uploadDirectory)) {
@@ -42,7 +65,14 @@ const upload = multer({
   storage,
   limits: { fileSize: MAX_CHAT_IMAGE_SIZE_BYTES },
   fileFilter: (req, file, cb) => {
-    // Keep validation strict so only image payloads reach the controller.
+    let mimetype = normalizeMimeType(file.mimetype);
+    if (!mimetype) {
+      mimetype = mimeFromExtension(file.originalname);
+    }
+    if (mimetype) {
+      file.mimetype = mimetype;
+    }
+
     if (!allowedImageMimeTypes.has(file.mimetype)) {
       const error = new Error("Only JPG, PNG, WEBP, and GIF images are allowed.");
       error.status = 400;
