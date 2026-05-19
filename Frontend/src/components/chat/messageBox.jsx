@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import './chat.css';
 import { HiOutlineCpuChip, HiOutlinePaperAirplane, HiOutlinePhoto, HiXMark } from "react-icons/hi2";
+import VoiceInput from './VoiceInput';
 import {
   CHAT_IMAGE_MAX_BYTES,
   CHAT_IMAGE_MAX_MB,
@@ -120,6 +121,10 @@ export default function MessageBox({ onSend, selectedModel, onModelChange, model
                 onChange={handleImageChange}
               />
             </label>
+
+            <div className="composer-tool">
+              <VoiceInput onSend={onSend} disabled={false} />
+            </div>
 
             <div className="composer-tool model-select-item">
               <span className="message-box-tool-label">
